@@ -1,4 +1,7 @@
 */node_modules
+*/dist
 
 riming-web/.next/
 riming-web/out/
+
+riming-server/tsconfig.tsbuildinfo
