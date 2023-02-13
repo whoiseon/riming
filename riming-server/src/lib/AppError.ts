@@ -2,7 +2,8 @@ type ErrorName =
   | 'UsernameExistsError'
   | 'EmailExistsError'
   | 'AuthenticationError'
-  | 'UnknownError';
+  | 'UnknownError'
+  | 'UnauthorizedError';
 type ErrorInfo = {
   message: string;
   statusCode: number;
@@ -24,6 +25,10 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
   UnknownError: {
     message: 'Unknown error',
     statusCode: 500,
+  },
+  UnauthorizedError: {
+    message: 'Unauthorized',
+    statusCode: 401,
   },
 };
 
@@ -49,3 +54,10 @@ export const appErrorSchema = {
     statusCode: { type: 'number' },
   },
 };
+
+export function createAppErrorSchema<T>(example: T) {
+  return {
+    ...appErrorSchema,
+    example,
+  };
+}

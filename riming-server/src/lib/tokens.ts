@@ -41,7 +41,7 @@ export function validateToken<T>(token: string) {
   });
 }
 
-interface AccessTokenPayload {
+export interface AccessTokenPayload {
   type: 'access_token';
   userId: number;
   tokenId: number;
@@ -49,7 +49,7 @@ interface AccessTokenPayload {
   email: string;
 }
 
-interface RefreshTokenPayload {
+export interface RefreshTokenPayload {
   type: 'refresh_token';
   tokenId: number;
   rotationCounter: number;
