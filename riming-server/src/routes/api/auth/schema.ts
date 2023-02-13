@@ -57,5 +57,13 @@ export const loginSchema: FastifySchema = {
   body: loginBodySchema,
   response: {
     200: authResultSchema,
+    401: {
+      ...appErrorSchema,
+      example: {
+        name: 'AuthenticationError',
+        message: 'Invalid password or email',
+        statusCode: 401,
+      },
+    },
   },
 };

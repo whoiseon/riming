@@ -1,12 +1,17 @@
 import db from '../lib/db';
 import bcrypt from 'bcrypt';
-import AppError from '../lib/AppError';
+import AppError, { isAppError } from '../lib/AppError';
 import { generateToken } from '../lib/tokens';
+import { User } from '@prisma/client';
 
 const SALT_ROUNDS = 10;
 
-interface AuthParams {
+interface RegisterParams {
   username: string;
+  email: string;
+  password: string;
+}
+interface LoginParams {
   email: string;
   password: string;
 }
@@ -20,7 +25,8 @@ class UserService {
     return UserService.instance;
   }
 
-  async gerateTokens(userId: number, email: string, username: string) {
+  async gerateTokens(user: User) {
+    const { id: userId, email, username } = user;
     const [accessToken, refreshToken] = await Promise.all([
       generateToken({
         type: 'access_token',
@@ -39,7 +45,7 @@ class UserService {
     return { refreshToken, accessToken };
   }
 
-  async register({ username, email, password }: AuthParams) {
+  async register({ username, email, password }: RegisterParams) {
     const usernameExists = await db.user.findUnique({
       where: {
         username,
@@ -66,15 +72,42 @@ class UserService {
       },
     });
 
-    const tokens = await this.gerateTokens(user.id, email, username);
+    const tokens = await this.gerateTokens(user);
     return {
-      tokens,
       user,
+      tokens,
     };
   }
 
-  login() {
-    return 'logged in';
+  async login({ email, password }: LoginParams) {
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new AppError('AuthenticationError');
+    }
+
+    try {
+      const result = await bcrypt.compare(password, user.passwordHash);
+      if (!result) {
+        throw new AppError('AuthenticationError');
+      }
+    } catch (error) {
+      if (isAppError(error)) {
+        throw error;
+      }
+      throw new AppError('UnknownError');
+    }
+
+    const tokens = await this.gerateTokens(user);
+
+    return {
+      user,
+      tokens,
+    };
   }
 }
 
