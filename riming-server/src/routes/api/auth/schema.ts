@@ -1,4 +1,5 @@
 import { FastifySchema } from 'fastify';
+import { appErrorSchema } from '../../../lib/AppError';
 
 const authResultSchema = {
   type: 'object',
@@ -41,6 +42,14 @@ export const registerSchema: FastifySchema = {
   body: registerBodySchema,
   response: {
     200: authResultSchema,
+    409: {
+      ...appErrorSchema,
+      example: {
+        name: 'UsernameExistsError',
+        message: 'Username already exists',
+        statusCode: 409,
+      },
+    },
   },
 };
 
