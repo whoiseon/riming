@@ -1,0 +1,259 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // provider = "postgresql"
+  // url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String  @unique
+  passwordHash String
+  createdAt DateTime @default(now())
+
+  News News[]
+
+  market Market[] @relation("user")
+  reviews Review[] @relation("user")
+  comments Comment[] @relation("user")
+  purchaseRequest PurchaseRequest[] @relation("user")
+  CommentLike CommentLike[]
+  Subscribe Subscribe[]
+}
+
+// model Token {
+
+// }
+
+model Market {
+  id Int @id @default(autoincrement())
+  name String @unique
+  tags Tag[]
+  thumbnail String?
+  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  marketsTags MarketsTags[]
+  products Product[]
+  subscribes Subscribe[]
+  reviews Review[]
+  purchaseRequest PurchaseRequest[]
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+  text String
+  rating Int
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  likes Int @default(0)
+
+  marketId Int
+  userId Int
+
+  @@index(deletedAt)
+  @@index(createdAt)
+}
+
+model News {
+  id Int @id @default(autoincrement())
+  userId Int
+  title String
+  body String
+  likes Int @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  NewsLike NewsLike[]
+  comments Comment[]
+}
+
+model NewsLike {
+  id Int @id @default(autoincrement())
+  newsId Int
+  userId Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@unique([newsId, userId])
+  @@index(newsId)
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  text String
+
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  likes Int @default(0)
+  subcommentsCount Int @default(0)
+
+  parentCommentId Int?
+  productId Int?
+  newsId Int
+  userId Int
+  commentLikes CommentLike[]
+
+  @@index(deletedAt)
+  @@index(createdAt)
+  @@index(parentCommentId)
+}
+
+model CommentLike {
+  id Int @id @default(autoincrement())
+  commentId Int
+  userId Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@index(commentId)
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+  image String
+  title String
+  count Int
+  price Int
+  tags Tag[]
+  transactionArea String
+  text String
+  deliveryCharge Boolean
+  saleStats String
+  productStats String
+  exchange Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  marketId Int
+
+  productLikes ProductLike[]
+  productsTags ProductsTags[]
+  purchaseRequest PurchaseRequest[]
+
+  @@index([createdAt(sort: Desc)])
+}
+
+model ProductLike {
+  id Int @id @default(autoincrement())
+  productId Int
+  marketId Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, marketId])
+  @@index(productId)
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+  name String @unique
+  product Product? @relation(fields: [productId], references: [id])
+  productId Int?
+  market Market? @relation(fields: [marketId], references: [id])
+  marketId Int?
+
+  marketsTags MarketsTags[]
+  productTags ProductsTags[]
+}
+
+model MarketsTags {
+  market Market @relation(fields: [marketId], references: [id])
+  marketId Int
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+  @@id([marketId, tagId])
+  @@index(tagId)
+  @@index(marketId)
+}
+
+model ProductsTags {
+  product Product @relation(fields: [productId], references: [id])
+  productId Int
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([productId, tagId])
+  @@index(tagId)
+  @@index(productId)
+}
+
+model TagRelation {
+  id          Int @id @default(autoincrement())
+  tagId       Int
+  originTagId Int
+  @@index(tagId)
+  @@index(originTagId)
+}
+
+
+model Subscribe {
+  id Int @id @default(autoincrement())
+  userId Int
+  marketId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, marketId])
+  @@index(marketId)
+}
+
+model PurchaseRequest {
+  id Int @id @default(autoincrement())
+  userId Int
+  marketId Int
+  productId Int
+  status String @default("대기중")
+  text String
+  phone String
+  sns String? @default("")
+  offer Int
+  type String
+  adress String
+  rejectedReson String? @default("")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+}

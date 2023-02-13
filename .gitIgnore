@@ -5,3 +5,5 @@ riming-web/.next/
 riming-web/out/
 
 riming-server/tsconfig.tsbuildinfo
+riming-server/.env
+riming-server/prisma/dev.db

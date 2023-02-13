@@ -3,6 +3,7 @@ import fastifySwagger from '@fastify/swagger';
 
 import routes from './routes';
 import { swaggerConfig } from './config/swagger';
+import db from './lib/db';
 
 const fastify = Fastify({
   logger: true,
