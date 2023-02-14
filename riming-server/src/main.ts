@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import fastifySwagger from '@fastify/swagger';
+import fastifyCookie from '@fastify/cookie';
 
 import routes from './routes';
 import { swaggerConfig } from './config/swagger';
@@ -16,6 +17,8 @@ if (process.env.NODE_ENV !== 'production') {
   await fastify.register(fastifySwagger, swaggerConfig);
 }
 
+fastify.register(fastifyCookie, {});
+
 fastify.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode ?? 500;
   if (error instanceof AppError) {
@@ -23,6 +26,7 @@ fastify.setErrorHandler(async (error, request, reply) => {
       name: error.name,
       message: error.message,
       statusCode: error.statusCode,
+      payload: error.payload,
     };
   }
   return error;

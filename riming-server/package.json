@@ -6,6 +6,7 @@
   "license": "MIT",
   "repository": "https://github.com/whoiseon/riming.git",
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
     "@fastify/swagger": "^7.4.1",
     "@prisma/client": "4.10.1",
     "@types/bcrypt": "^5.0.0",

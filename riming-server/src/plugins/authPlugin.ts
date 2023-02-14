@@ -3,25 +3,30 @@ import { FastifyPluginAsync } from 'fastify';
 import fp from 'fastify-plugin';
 import jwt from 'jsonwebtoken';
 import { validateToken } from '../lib/tokens';
+import AppError from '../lib/AppError';
 
 const { JsonWebTokenError } = jwt;
 
 const authPluginAsync: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null);
+  fastify.decorateRequest('isExpiredToken', false);
   fastify.addHook('preHandler', async (request) => {
     const { authorization } = request.headers;
-    if (!authorization || authorization?.includes('Bearer')) {
-      return;
-    }
+    const token = authorization?.split(' ')[1] ?? request.cookies.access_token;
 
-    const token = authorization.split(' ')[1];
+    if (!token) return;
+
     try {
       const decoded = await validateToken<AccessTokenPayload>(token);
-      console.log(decoded);
+      request.user = {
+        id: decoded.userId,
+        username: decoded.username,
+        email: decoded.email,
+      };
     } catch (error: any) {
       if (error instanceof JsonWebTokenError) {
         if (error.name === 'TokenExpiredError') {
-          // todo: handle token expired
+          request.isExpiredToken = true;
         }
       }
     }
@@ -39,5 +44,6 @@ declare module 'fastify' {
       email: string;
       username: string;
     } | null;
+    isExpiredToken: boolean;
   }
 }
