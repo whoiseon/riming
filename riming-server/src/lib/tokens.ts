@@ -56,6 +56,7 @@ export interface RefreshTokenPayload {
 }
 
 type TokenPayload = AccessTokenPayload | RefreshTokenPayload;
+
 type DecodedToken<T> = {
   iat: number;
   exp: number;

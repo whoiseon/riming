@@ -23,6 +23,7 @@ const registerBodySchema = {
     password: { type: 'string' },
     username: { type: 'string' },
   },
+  required: ['email', 'password', 'username'],
 };
 
 const loginBodySchema = {
@@ -31,6 +32,7 @@ const loginBodySchema = {
     email: { type: 'string' },
     password: { type: 'string' },
   },
+  required: ['email', 'password'],
 };
 
 export const registerSchema: FastifySchema = {
@@ -54,5 +56,14 @@ export const loginSchema: FastifySchema = {
       message: 'Invalid password or email',
       statusCode: 401,
     }),
+  },
+};
+
+export const refreshTokenSchema: FastifySchema = {
+  body: {
+    type: 'object',
+    properties: {
+      refreshToken: { type: 'string' },
+    },
   },
 };

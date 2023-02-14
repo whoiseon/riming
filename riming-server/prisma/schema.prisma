@@ -20,6 +20,7 @@ model User {
   createdAt DateTime @default(now())
 
   News News[]
+  Token Token[]
 
   market Market[] @relation("user")
   reviews Review[] @relation("user")
@@ -29,9 +30,13 @@ model User {
   Subscribe Subscribe[]
 }
 
-// model Token {
-
-// }
+model Token {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  createdAt DateTime @default(now())
+  blocked Boolean @default(false)
+}
 
 model Market {
   id Int @id @default(autoincrement())

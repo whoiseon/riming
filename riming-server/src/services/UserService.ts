@@ -1,7 +1,11 @@
 import db from '../lib/db';
 import bcrypt from 'bcrypt';
 import AppError, { isAppError } from '../lib/AppError';
-import { generateToken } from '../lib/tokens';
+import {
+  generateToken,
+  RefreshTokenPayload,
+  validateToken,
+} from '../lib/tokens';
 import { User } from '@prisma/client';
 
 const SALT_ROUNDS = 10;
@@ -25,24 +29,54 @@ class UserService {
     return UserService.instance;
   }
 
-  async gerateTokens(user: User) {
+  async createTokenId(userId: number) {
+    const token = await db.token.create({
+      data: {
+        userId,
+      },
+    });
+    return token.id;
+  }
+
+  async generateTokens(user: User, existingTokenId?: number) {
     const { id: userId, email, username } = user;
+    const tokenId = existingTokenId ?? (await this.createTokenId(userId));
     const [accessToken, refreshToken] = await Promise.all([
       generateToken({
         type: 'access_token',
         userId,
-        tokenId: 1,
+        tokenId,
         email,
         username,
       }),
       generateToken({
         type: 'refresh_token',
-        tokenId: 1,
+        tokenId,
         rotationCounter: 1,
       }),
     ]);
 
     return { refreshToken, accessToken };
+  }
+
+  async refreshToken(token: string) {
+    try {
+      const { tokenId } = await validateToken<RefreshTokenPayload>(token);
+      const tokenItem = await db.token.findUnique({
+        where: {
+          id: tokenId,
+        },
+        include: {
+          user: true,
+        },
+      });
+      if (!tokenItem) {
+        throw new Error('Token not found');
+      }
+      return await this.generateTokens(tokenItem.user, tokenId);
+    } catch (error) {
+      throw new AppError('RefreshTokenError');
+    }
   }
 
   async register({ username, email, password }: RegisterParams) {
@@ -72,7 +106,7 @@ class UserService {
       },
     });
 
-    const tokens = await this.gerateTokens(user);
+    const tokens = await this.generateTokens(user);
     return {
       user,
       tokens,
@@ -102,7 +136,7 @@ class UserService {
       throw new AppError('UnknownError');
     }
 
-    const tokens = await this.gerateTokens(user);
+    const tokens = await this.generateTokens(user);
 
     return {
       user,
