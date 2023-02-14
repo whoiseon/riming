@@ -3,6 +3,7 @@ import { FastifyPluginAsync } from 'fastify';
 
 import { registerSchema, loginSchema } from './schema';
 import { RegisterBody, LoginBody } from './types';
+import requireAuthPlugin from '../../../plugins/requireAuthPlugin';
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance();
