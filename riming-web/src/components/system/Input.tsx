@@ -10,7 +10,7 @@ function Input(props: Props) {
 const StyledInput = styled.input`
   background-color: ${colors.gray0};
   border: none;
-  height: 40px;
+  height: 42px;
   border-radius: 6px;
   transition: all 0.16s ease-in-out;
   outline: none;
@@ -24,6 +24,10 @@ const StyledInput = styled.input`
     background-color: #ffffff;
     border: 1px solid ${colors.main.hover};
     box-shadow: 0 0 0 4px ${colors.gray0};
+  }
+
+  &::placeholder {
+    color: ${colors.gray2};
   }
 `;
 

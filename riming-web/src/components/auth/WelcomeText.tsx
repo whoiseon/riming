@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import Logo from '@/assets/vectors/logo.svg';
 import { colors } from '@/styles/colors';
 
 interface Props {
@@ -14,24 +13,17 @@ const textDescriptions = {
 function WelcomeText({ mode }: Props) {
   return (
     <Block>
-      <Logo />
-      <p>{textDescriptions[mode]}</p>
+      <h1>{textDescriptions[mode]}</h1>
     </Block>
   );
 }
 
 const Block = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  svg {
-    width: 101px;
-    margin-bottom: 8px;
-    color: ${colors.main.primary};
-  }
-  p {
-    font-size: 16px;
-    font-weight: 500;
+  text-align: center;
+  padding: 16px 0;
+  h1 {
+    font-size: 18px;
+    font-weight: 600;
     color: ${colors.gray3};
   }
 `;
