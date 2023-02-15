@@ -6,8 +6,13 @@ export const colors = {
   gray4: '#2E2E2E',
   gray5: '#121212',
   main: {
-    primary: '#1D73E8',
-    primaryHover: '#619DEF',
-    primaryActive: '#175CBA',
+    primary: '#3D5AFE',
+    hover: '#637BFE',
+    active: '#2A3EB1;',
+  },
+  distructive: {
+    primary: '#F44336',
+    hover: '#F6685E',
+    active: '#AA2E25;',
   },
 };

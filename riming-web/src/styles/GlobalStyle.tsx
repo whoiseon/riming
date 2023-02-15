@@ -1,6 +1,8 @@
-import { createGlobalStyle } from 'styled-components';
+import { css, Global } from '@emotion/react';
 
-const GlobalStyle = createGlobalStyle`
+const styles = css`
+  @import url('https://webfontworld.github.io/pretendard/Pretendard.css');
+
   * {
     box-sizing: border-box;
   }
@@ -89,7 +91,8 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     border: 0;
     font-size: 100%;
-    font: inherit;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: normal;
     vertical-align: baseline;
   }
   article,
@@ -127,6 +130,15 @@ const GlobalStyle = createGlobalStyle`
     border-collapse: collapse;
     border-spacing: 0;
   }
+  button {
+    padding: 0;
+    border: none;
+    background: none;
+  }
 `;
+
+function GlobalStyle() {
+  return <Global styles={styles} />;
+}
 
 export default GlobalStyle;
