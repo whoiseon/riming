@@ -1,10 +1,20 @@
 import { colors } from '@/styles/colors';
 import styled from '@emotion/styled';
+import { RegisterOptions, UseFormRegister } from 'react-hook-form';
 
-export interface Props extends React.HTMLAttributes<HTMLInputElement> {}
+export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  register: any;
+  option: RegisterOptions;
+  errors?: any;
+}
 
-function Input(props: Props) {
-  return <StyledInput {...props} />;
+function Input({ register, name, option, errors, ...rest }: Props) {
+  return (
+    <>
+      <StyledInput {...register(name, option)} {...rest} />
+      {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+    </>
+  );
 }
 
 const StyledInput = styled.input`
@@ -20,7 +30,7 @@ const StyledInput = styled.input`
   color: ${colors.gray5};
 
   &:hover,
-  focus {
+  :focus {
     background-color: #ffffff;
     border: 1px solid ${colors.main.hover};
     box-shadow: 0 0 0 4px ${colors.gray0};
@@ -29,6 +39,22 @@ const StyledInput = styled.input`
   &::placeholder {
     color: ${colors.gray2};
   }
+
+  &:disabled {
+    opacity: 0.5;
+    &:hover,
+    :focus {
+      background-color: ${colors.gray0};
+      border: none;
+      box-shadow: none;
+    }
+  }
+`;
+
+const ErrorMessage = styled.p`
+  margin-top: 8px;
+  font-size: 14px;
+  color: ${colors.distructive.primary};
 `;
 
 export default Input;

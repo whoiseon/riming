@@ -5,7 +5,7 @@ interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth';
 }
 
-interface Props extends React.HTMLAttributes<HTMLButtonElement>, ButtonProps {}
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
 
 function Button({ layoutMode = 'inline', ...rest }: Props) {
   return <StyledButton layoutMode={layoutMode} {...rest} />;
@@ -13,7 +13,7 @@ function Button({ layoutMode = 'inline', ...rest }: Props) {
 
 const StyledButton = styled.button<ButtonProps>`
   display: flex;
-  background: ${colors.main.primary};
+  background-color: ${colors.main.primary};
   color: white;
   height: 42px;
   font-size: 14px;
@@ -23,7 +23,7 @@ const StyledButton = styled.button<ButtonProps>`
   padding-left: 16px;
   padding-right: 16px;
   border-radius: 6px;
-  transition: background-color 0.16s ease-in-out;
+  transition: all 0.16s ease-in-out;
   ${(props) =>
     props.layoutMode === 'fullWidth' &&
     `
@@ -37,7 +37,13 @@ const StyledButton = styled.button<ButtonProps>`
     background-color: ${colors.main.active};
   }
   &:disabled {
-    opacity: 0.5;
+    filter: grayscale(0.6);
+    &:hover {
+      background-color: ${colors.main.primary};
+    }
+    &:active {
+      background-color: ${colors.main.primary};
+    }
   }
 `;
 
