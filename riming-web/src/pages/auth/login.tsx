@@ -1,7 +1,7 @@
 import AuthForm from '@/components/auth/AuthForm';
 import WelcomeText from '@/components/auth/WelcomeText';
-import HeaderBackButton from '@/components/base/HeaderBackButton';
-import MobileHeader from '@/components/MobileHeader';
+import HeaderButton from '@/components/base/HeaderButton';
+import MobileHeader from '@/components/base/MobileHeader';
 import useGoBack from '@/hooks/useGoBack';
 import { useCallback, useEffect, useState } from 'react';
 import { type loginFormValues } from '@/lib/type';
@@ -62,7 +62,7 @@ export default function Login() {
     <>
       <MobileHeader
         title="로그인"
-        headerLeft={<HeaderBackButton onClick={goBack} />}
+        headerLeft={<HeaderButton icon="arrowBack" onClick={goBack} />}
         hasBorder={false}
       />
       <WelcomeText mode="login" />

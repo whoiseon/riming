@@ -20,6 +20,10 @@ interface LoginParams {
   email: string;
   password: string;
 }
+interface MarketParams {
+  userId?: number;
+}
+
 class UserService {
   private static instance: UserService;
   public static getInstance() {
@@ -167,6 +171,23 @@ class UserService {
     return {
       user,
       tokens,
+    };
+  }
+
+  async market({ userId }: MarketParams) {
+    if (!userId) return;
+    const market = await db.market.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!market) {
+      return null;
+    }
+
+    return {
+      market,
     };
   }
 }

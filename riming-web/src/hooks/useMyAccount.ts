@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie';
 function useMyAccount(): UseQueryResult {
   const [cookies] = useCookies();
   const myAccount = useQuery({
-    queryKey: ['user'],
+    queryKey: ['me'],
     queryFn: getMyAccount,
     refetchOnWindowFocus: true,
     enabled: cookies?.access_token !== undefined,

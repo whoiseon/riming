@@ -3,16 +3,23 @@ import styled from '@emotion/styled';
 import { RegisterOptions, UseFormRegister } from 'react-hook-form';
 
 export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  register: any;
-  option: RegisterOptions;
+  register?: any;
+  option?: RegisterOptions;
   errors?: any;
 }
 
 function Input({ register, name, option, errors, ...rest }: Props) {
+  if (register) {
+    return (
+      <>
+        <StyledInput {...register(name, option)} {...rest} />
+        {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+      </>
+    );
+  }
   return (
     <>
-      <StyledInput {...register(name, option)} {...rest} />
-      {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+      <StyledInput {...rest} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
-import HeaderBackButton from '@/components/base/HeaderBackButton';
-import MobileHeader from '@/components/MobileHeader';
+import HeaderButton from '@/components/base/HeaderButton';
+import MobileHeader from '@/components/base/MobileHeader';
 import useGoBack from '@/hooks/useGoBack';
 import AuthForm from '@/components/auth/AuthForm';
 import WelcomeText from '@/components/auth/WelcomeText';
@@ -55,7 +55,7 @@ export default function Register() {
     <Page>
       <MobileHeader
         title="회원가입"
-        headerLeft={<HeaderBackButton onClick={goBack} />}
+        headerLeft={<HeaderButton icon="arrowBack" onClick={goBack} />}
         hasBorder={false}
       />
       <WelcomeText mode="register" />

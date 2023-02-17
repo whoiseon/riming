@@ -132,7 +132,7 @@ function AuthForm({ mode, onSubmit, isLoading, serverError }: Props) {
       </InputGroup>
       <ActionsBox>
         {serverError && <ErrorMessage>{handleToTranslateError}</ErrorMessage>}
-        <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
+        <Button type="submit" layoutmode="fullWidth" disabled={isLoading}>
           {isLoading ? `${buttonText}중 입니다...` : buttonText}
         </Button>
         <QuestionLink question={question} name={actionName} href={actionLink} />

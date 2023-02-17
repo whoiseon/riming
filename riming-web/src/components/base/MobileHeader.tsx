@@ -35,6 +35,7 @@ const Title = styled.div`
   font-size: 18px;
   font-weight: 600;
   svg {
+    display: block;
     width: 71px;
     height: 28px;
   }

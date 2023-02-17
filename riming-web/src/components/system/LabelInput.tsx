@@ -1,6 +1,5 @@
 import { colors } from '@/styles/colors';
 import styled from '@emotion/styled';
-import { FieldError } from 'react-hook-form';
 import Input, { type Props as InputProps } from './Input';
 
 interface Props extends InputProps {

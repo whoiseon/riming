@@ -15,9 +15,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <CookiesProvider>
         <CacheProvider value={cache}>
-          <GlobalStyle />
-          <ReactQueryDevtools />
           <Hydrate state={pageProps.dehydratedState}>
+            <GlobalStyle />
+            <ReactQueryDevtools />
             <Component {...pageProps} />
           </Hydrate>
         </CacheProvider>

@@ -1,8 +1,11 @@
 import { FastifyPluginAsync } from 'fastify';
 import requireAuthPlugin from '../../../plugins/requireAuthPlugin';
+import UserService from '../../../services/UserService';
 import { getMeSchema } from './schema';
 
 export const meRoute: FastifyPluginAsync = async (fastify) => {
+  const userService = UserService.getInstance();
+
   fastify.register(requireAuthPlugin);
   fastify.get(
     '/',
@@ -10,7 +13,11 @@ export const meRoute: FastifyPluginAsync = async (fastify) => {
       schema: getMeSchema,
     },
     async (request) => {
-      return request.user;
+      const market = await userService.market({ userId: request.user?.id });
+      return {
+        ...request.user,
+        market,
+      };
     },
   );
 };

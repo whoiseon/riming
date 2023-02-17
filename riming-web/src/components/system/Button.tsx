@@ -1,50 +1,109 @@
 import { colors } from '@/styles/colors';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Link from 'next/link';
 
 interface ButtonProps {
-  layoutMode?: 'inline' | 'fullWidth';
+  layoutmode?: 'inline' | 'fullWidth';
+  size?: 'small' | 'medium';
+  variant?: 'primary' | 'secondary' | 'text';
 }
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
-
-function Button({ layoutMode = 'inline', ...rest }: Props) {
-  return <StyledButton layoutMode={layoutMode} {...rest} />;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {
+  to?: string;
+  href?: string;
 }
 
-const StyledButton = styled.button<ButtonProps>`
+function Button({
+  layoutmode = 'inline',
+  size = 'medium',
+  variant = 'primary',
+  href,
+  ...rest
+}: Props) {
+  if (href) {
+    return (
+      <StyledLink
+        layoutmode={layoutmode}
+        variant={variant}
+        size={size}
+        href={href}
+        style={rest.style}
+      >
+        {rest.children}
+      </StyledLink>
+    );
+  }
+  return <StyledButton layoutmode={layoutmode} variant={variant} size={size} {...rest} />;
+}
+
+const variantStyles = {
+  primary: css`
+    background: ${colors.main.primary};
+    color: white;
+    &:hover {
+      opacity: 0.875;
+    }
+  `,
+  secondary: css`
+    background: ${colors.distructive.primary};
+    color: white;
+    &:hover {
+      opacity: 0.875;
+    }
+  `,
+  text: css`
+    background: transparent;
+    color: ${colors.gray4};
+    text-decoration: none;
+    &:hover {
+      background: ${colors.gray0};
+      color: ${colors.main.primary};
+    }
+  `,
+};
+
+const sizeStyles = {
+  small: css`
+    height: 36px;
+    font-size: 14px;
+    padding-left: 12px;
+    padding-right: 12px;
+  `,
+  medium: css`
+    height: 42px;
+    font-size: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+  `,
+};
+
+const sharedStyles = (props: ButtonProps) => css`
   display: flex;
-  background-color: ${colors.main.primary};
-  color: white;
-  height: 42px;
-  font-size: 14px;
+  ${sizeStyles[props.size!]};
+  ${variantStyles[props.variant!]!};
   font-weight: 600;
   align-items: center;
   justify-content: center;
-  padding-left: 16px;
-  padding-right: 16px;
   border-radius: 6px;
   transition: all 0.16s ease-in-out;
-  ${(props) =>
-    props.layoutMode === 'fullWidth' &&
-    `
-    width: 100%;
-  `}
 
-  &:hover {
-    background-color: ${colors.main.hover};
-  }
-  &:active {
-    background-color: ${colors.main.active};
-  }
   &:disabled {
     filter: grayscale(0.6);
-    &:hover {
-      background-color: ${colors.main.primary};
-    }
-    &:active {
-      background-color: ${colors.main.primary};
-    }
   }
+
+  ${props.layoutmode === 'fullWidth' &&
+  css`
+    width: 100%;
+  `}
+`;
+
+const StyledButton = styled.button<ButtonProps>`
+  ${(props) => sharedStyles(props)}
+`;
+
+const StyledLink = styled(Link)<ButtonProps>`
+  ${(props) => sharedStyles(props)}
 `;
 
 export default Button;

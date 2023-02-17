@@ -15,7 +15,7 @@ const fastify = Fastify({
 });
 
 fastify.register(cors, {
-  origin: /localhost/,
+  origin: true,
   allowedHeaders: ['Cookie', 'Content-Type'],
   credentials: true,
 });
