@@ -16,6 +16,7 @@ import { getMyAccount, login } from '@/lib/api/auth';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import useMyAccount from '@/hooks/useMyAccount';
+import { extractError } from '@/lib/error';
 
 export default function Login() {
   const queryClient = useQueryClient();
@@ -32,12 +33,17 @@ export default function Login() {
     },
     onSuccess: () => {
       queryClient.refetchQueries(['user']);
+      router.push('/');
     },
-    onError: (error: any) => {},
+    onError: (e: any) => {
+      const error = extractError(e);
+      setLoginError(error.name);
+    },
   });
 
   const onSubmit = useCallback(
     async ({ email, password }: loginFormValues) => {
+      if (!email || !password) return;
       mutate({
         email,
         password,
@@ -60,18 +66,18 @@ export default function Login() {
         hasBorder={false}
       />
       <WelcomeText mode="login" />
-      <AuthForm mode="login" onSubmit={onSubmit} isLoading={isLoading} />
+      <AuthForm mode="login" onSubmit={onSubmit} isLoading={isLoading} serverError={loginError} />
     </>
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const queryClient = new QueryClient();
-//   await queryClient.prefetchQuery(['user'], getMyAccount);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['user'], getMyAccount);
 
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//   };
-// };
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

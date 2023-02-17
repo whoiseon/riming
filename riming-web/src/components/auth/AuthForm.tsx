@@ -3,14 +3,17 @@ import LabelInput from '@/components/system/LabelInput';
 import Button from '../system/Button';
 import QuestionLink from './QuestionLink';
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { registerFormErrors, loginFormErrors } from '@/lib/authFormErrors';
 import { type RegisterFormValues } from '@/lib/type';
+import { ErrorName } from '@/lib/error';
+import { colors } from '@/styles/colors';
 
 interface Props {
   mode: 'login' | 'register';
   onSubmit: (data: RegisterFormValues) => void;
   isLoading: boolean;
+  serverError?: string | ErrorName;
 }
 
 const modeDescriptions = {
@@ -44,7 +47,7 @@ const modeDescriptions = {
   },
 };
 
-function AuthForm({ mode, onSubmit, isLoading }: Props) {
+function AuthForm({ mode, onSubmit, isLoading, serverError }: Props) {
   const {
     register,
     handleSubmit,
@@ -73,6 +76,23 @@ function AuthForm({ mode, onSubmit, isLoading }: Props) {
       password: passwordErrorOption,
     },
   } = modeDescriptions[mode];
+
+  const handleToTranslateError = useMemo(() => {
+    switch (serverError) {
+      case 'UsernameExistsError':
+        return '이미 사용중인 이름 또는 닉네임 입니다!';
+      case 'EmailExistsError':
+        return '이미 사용중인 이메일 입니다!';
+      case 'AuthenticationError':
+        return '이메일 또는 비밀번호를 다시 확인해주세요!';
+      case 'UnauthorizedError':
+        return '인증되지 않은 사용자입니다!';
+      case 'UnknownError':
+        return '알 수 없는 오류가 발생하였습니다!';
+      default:
+        return undefined;
+    }
+  }, [serverError]);
 
   return (
     <Block onSubmit={handleSubmit(onSubmit)}>
@@ -111,6 +131,7 @@ function AuthForm({ mode, onSubmit, isLoading }: Props) {
         />
       </InputGroup>
       <ActionsBox>
+        {serverError && <ErrorMessage>{handleToTranslateError}</ErrorMessage>}
         <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
           {isLoading ? `${buttonText}중 입니다...` : buttonText}
         </Button>
@@ -138,7 +159,13 @@ const ActionsBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 14px;
   gap: 24px;
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 14px;
+  color: ${colors.distructive.primary};
 `;
 
 export default AuthForm;

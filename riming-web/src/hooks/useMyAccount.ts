@@ -1,15 +1,16 @@
 import { getMyAccount } from '@/lib/api/auth';
-import { useQuery } from '@tanstack/react-query';
-import { parseCookies } from 'nookies';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useCookies } from 'react-cookie';
 
-function useMyAccount() {
-  const cookies = parseCookies();
+function useMyAccount(): UseQueryResult {
+  const [cookies] = useCookies();
   const myAccount = useQuery({
     queryKey: ['user'],
     queryFn: getMyAccount,
-    retry: 3,
+    refetchOnWindowFocus: true,
+    enabled: cookies?.access_token !== undefined,
   });
-  console.log(cookies);
+
   return myAccount;
 }
 

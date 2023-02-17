@@ -1,9 +1,5 @@
 export const registerFormErrors = {
   username: {
-    required: {
-      value: true,
-      message: '이름 또는 닉네임을 입력해주세요!',
-    },
     maxLength: {
       value: 16,
       message: '이름은 16자 이하로 입력해주세요!',
@@ -18,20 +14,12 @@ export const registerFormErrors = {
     },
   },
   email: {
-    required: {
-      value: true,
-      message: '이메일을 입력해주세요!',
-    },
     pattern: {
       value: /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
       message: '이메일 형식에 맞게 입력해주세요!',
     },
   },
   password: {
-    required: {
-      value: true,
-      message: '비밀번호를 입력해주세요!',
-    },
     minLength: {
       value: 8,
       message: '비밀번호는 8자 이상으로 입력해주세요!',

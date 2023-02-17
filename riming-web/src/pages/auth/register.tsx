@@ -10,6 +10,7 @@ import { type RegisterFormValues } from '@/lib/type';
 import { useMutation } from '@tanstack/react-query';
 import { register } from '@/lib/api/auth';
 import useMyAccount from '@/hooks/useMyAccount';
+import { extractError } from '@/lib/error';
 
 export default function Register() {
   const { data } = useMyAccount();
@@ -20,16 +21,26 @@ export default function Register() {
 
   const { isLoading, mutate, error } = useMutation({
     mutationFn: register,
-    onMutate: (data) => {},
-    onSuccess: (data) => {
-      console.log(data);
+    onMutate: () => {
+      setRegisterError('');
     },
-    onError: (error: any) => {},
+    onSuccess: () => {
+      router.push('/');
+    },
+    onError: (e: any) => {
+      const error = extractError(e);
+      setRegisterError(error.name);
+    },
   });
 
   const onSubmit = useCallback(
-    async (data: RegisterFormValues) => {
-      mutate(data);
+    async ({ username, email, password }: RegisterFormValues) => {
+      if (!username || !email || !password) return;
+      mutate({
+        username,
+        email,
+        password,
+      });
     },
     [mutate],
   );
@@ -48,7 +59,12 @@ export default function Register() {
         hasBorder={false}
       />
       <WelcomeText mode="register" />
-      <AuthForm mode="register" onSubmit={onSubmit} isLoading={isLoading} />
+      <AuthForm
+        mode="register"
+        onSubmit={onSubmit}
+        isLoading={isLoading}
+        serverError={registerError}
+      />
     </Page>
   );
 }
