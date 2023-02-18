@@ -1,8 +1,4 @@
 import { useRouter } from 'next/router';
-import styled from '@emotion/styled';
-import HeaderButton from '@/components/base/HeaderButton';
-import MobileHeader from '@/components/base/MobileHeader';
-import useGoBack from '@/hooks/useGoBack';
 import AuthForm from '@/components/auth/AuthForm';
 import WelcomeText from '@/components/auth/WelcomeText';
 import { useCallback, useEffect, useState } from 'react';
@@ -11,11 +7,11 @@ import { useMutation } from '@tanstack/react-query';
 import { register } from '@/lib/api/auth';
 import useMyAccount from '@/hooks/useMyAccount';
 import { extractError } from '@/lib/error';
+import SimpleLayout from '@/components/layouts/SimpleLayout';
 
 export default function Register() {
   const { data } = useMyAccount();
 
-  const goBack = useGoBack();
   const router = useRouter();
   const [registerError, setRegisterError] = useState('');
 
@@ -52,12 +48,7 @@ export default function Register() {
   }, [data]);
 
   return (
-    <Page>
-      <MobileHeader
-        title="회원가입"
-        headerLeft={<HeaderButton icon="arrowBack" onClick={goBack} />}
-        hasBorder={false}
-      />
+    <SimpleLayout title="회원가입" hasBackButton>
       <WelcomeText mode="register" />
       <AuthForm
         mode="register"
@@ -65,11 +56,6 @@ export default function Register() {
         isLoading={isLoading}
         serverError={registerError}
       />
-    </Page>
+    </SimpleLayout>
   );
 }
-
-const Page = styled.div`
-  display: flex;
-  flex-direction: column;
-`;

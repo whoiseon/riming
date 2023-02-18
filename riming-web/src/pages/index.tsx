@@ -1,5 +1,5 @@
 import useMyAccount from '@/hooks/useMyAccount';
-import BasicLayout from '@/components/templates/BasicLayout';
+import BasicLayout from '@/components/layouts/BasicLayout';
 
 export default function Home() {
   return <BasicLayout>main</BasicLayout>;

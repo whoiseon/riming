@@ -13,6 +13,7 @@ export const meRoute: FastifyPluginAsync = async (fastify) => {
       schema: getMeSchema,
     },
     async (request) => {
+      if (!request.user) return;
       const market = await userService.market({ userId: request.user?.id });
       return {
         ...request.user,

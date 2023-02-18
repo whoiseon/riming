@@ -1,8 +1,5 @@
 import AuthForm from '@/components/auth/AuthForm';
 import WelcomeText from '@/components/auth/WelcomeText';
-import HeaderButton from '@/components/base/HeaderButton';
-import MobileHeader from '@/components/base/MobileHeader';
-import useGoBack from '@/hooks/useGoBack';
 import { useCallback, useEffect, useState } from 'react';
 import { type loginFormValues } from '@/lib/type';
 import {
@@ -17,12 +14,12 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import useMyAccount from '@/hooks/useMyAccount';
 import { extractError } from '@/lib/error';
+import SimpleLayout from '@/components/layouts/SimpleLayout';
 
 export default function Login() {
   const queryClient = useQueryClient();
   const { data } = useMyAccount();
 
-  const goBack = useGoBack();
   const router = useRouter();
   const [loginError, setLoginError] = useState('');
 
@@ -59,15 +56,10 @@ export default function Login() {
   }, [data]);
 
   return (
-    <>
-      <MobileHeader
-        title="로그인"
-        headerLeft={<HeaderButton icon="arrowBack" onClick={goBack} />}
-        hasBorder={false}
-      />
+    <SimpleLayout title="로그인" hasBackButton>
       <WelcomeText mode="login" />
       <AuthForm mode="login" onSubmit={onSubmit} isLoading={isLoading} serverError={loginError} />
-    </>
+    </SimpleLayout>
   );
 }
 
