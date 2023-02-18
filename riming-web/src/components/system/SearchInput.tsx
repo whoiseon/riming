@@ -19,7 +19,8 @@ function SearchInput(props: InputProps) {
 const Block = styled.div`
   display: flex;
   width: 100%;
-  padding: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 
   input {
     width: 100%;

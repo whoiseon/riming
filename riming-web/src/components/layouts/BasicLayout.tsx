@@ -45,7 +45,7 @@ function BasicLayout({ children }: Props) {
           )
         }
       />
-      {menuOpen ? <GlobalMenu /> : <Content>{children}</Content>}
+      {menuOpen ? <GlobalMenu closeMenu={toggleMenuButton} /> : <Content>{children}</Content>}
     </FullHeightPage>
   );
 }
