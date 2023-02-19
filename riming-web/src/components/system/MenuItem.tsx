@@ -2,29 +2,30 @@ import { colors } from '@/styles/colors';
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import ArrowRight from '@/assets/vectors/arrow-right.svg';
+import { css } from '@emotion/react';
 
 interface Props {
-  thumbnail?: boolean;
+  thumbnail?: string | React.ReactNode;
   hasArrowButton?: boolean;
   isMoreButton?: boolean;
+  isMarket?: boolean;
   title: string;
   href: string;
-  onClick: () => void;
 }
 
 function MenuItem({
-  thumbnail = false,
+  thumbnail = undefined,
   hasArrowButton = true,
   isMoreButton = false,
+  isMarket = false,
   title,
-  onClick,
   href,
 }: Props) {
   return (
     <Block>
-      <MenuLink onClick={onClick} href={href}>
-        <TitleGroup>
-          {thumbnail && <div>썸네일</div>}
+      <MenuLink href={href}>
+        <TitleGroup isMarket={isMarket}>
+          {thumbnail}
           <span>{title}</span>
         </TitleGroup>
         {hasArrowButton && <ArrowRight />}
@@ -44,20 +45,30 @@ const MenuLink = styled(Link)`
   width: 100%;
   text-decoration: none;
 
-  svg {
+  & > svg {
     width: 16px;
     height: 16px;
     color: ${colors.gray1};
   }
 `;
 
-const TitleGroup = styled.div`
+const TitleGroup = styled.div<{ isMarket?: boolean }>`
   display: flex;
   align-items: center;
   span {
     font-weight: 600;
     color: ${colors.gray3};
     margin-left: 8px;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+    ${(props) =>
+      props.isMarket &&
+      css`
+        width: 32px;
+        height: 32px;
+      `}
   }
 `;
 

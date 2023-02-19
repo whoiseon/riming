@@ -24,6 +24,8 @@ interface MarketParams {
   userId?: number;
 }
 
+interface SubscribeParams extends MarketParams {}
+
 class UserService {
   private static instance: UserService;
   public static getInstance() {
@@ -188,6 +190,18 @@ class UserService {
 
     return {
       market,
+    };
+  }
+
+  async subscribe({ userId }: SubscribeParams) {
+    if (!userId) return;
+    const subscribe = await db.subscribe.findMany({
+      where: {
+        userId,
+      },
+    });
+    return {
+      subscribe,
     };
   }
 }

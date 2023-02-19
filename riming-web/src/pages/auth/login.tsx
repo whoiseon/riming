@@ -9,7 +9,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { getMyAccount, login } from '@/lib/api/auth';
+import { getMyAccount, getMyAccountServer, login } from '@/lib/api/auth';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import useMyAccount from '@/hooks/useMyAccount';
@@ -18,7 +18,6 @@ import SimpleLayout from '@/components/layouts/SimpleLayout';
 
 export default function Login() {
   const queryClient = useQueryClient();
-  const { data } = useMyAccount();
 
   const router = useRouter();
   const [loginError, setLoginError] = useState('');
@@ -49,12 +48,6 @@ export default function Login() {
     [mutate],
   );
 
-  useEffect(() => {
-    if (data) {
-      router.replace('/');
-    }
-  }, [data]);
-
   return (
     <SimpleLayout title="로그인" hasBackButton>
       <WelcomeText mode="login" />
@@ -63,13 +56,18 @@ export default function Login() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['user'], getMyAccount);
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  if (req.cookies.access_token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+      props: {},
+    };
+  }
 
   return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
+    props: {},
   };
 };

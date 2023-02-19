@@ -5,13 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { type RegisterFormValues } from '@/lib/type';
 import { useMutation } from '@tanstack/react-query';
 import { register } from '@/lib/api/auth';
-import useMyAccount from '@/hooks/useMyAccount';
 import { extractError } from '@/lib/error';
 import SimpleLayout from '@/components/layouts/SimpleLayout';
+import { GetServerSideProps } from 'next';
 
 export default function Register() {
-  const { data } = useMyAccount();
-
   const router = useRouter();
   const [registerError, setRegisterError] = useState('');
 
@@ -41,12 +39,6 @@ export default function Register() {
     [mutate],
   );
 
-  useEffect(() => {
-    if (data) {
-      router.replace('/');
-    }
-  }, [data]);
-
   return (
     <SimpleLayout title="회원가입" hasBackButton>
       <WelcomeText mode="register" />
@@ -59,3 +51,19 @@ export default function Register() {
     </SimpleLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  if (req.cookies.access_token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+      props: {},
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

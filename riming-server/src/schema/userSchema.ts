@@ -9,5 +9,9 @@ export const userSchema = {
     id: 1,
     email: 'test@example.com',
     username: 'riming',
+    marekt: {
+      id: 1,
+      name: 'marekt',
+    },
   },
 };

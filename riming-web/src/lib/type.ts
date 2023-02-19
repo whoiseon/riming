@@ -23,4 +23,6 @@ export interface User {
   id: number;
   email: string;
   username: string;
+  market: any | null;
+  subscribe: any;
 }

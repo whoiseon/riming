@@ -1,10 +1,11 @@
 import { getMyAccount } from '@/lib/api/auth';
+import { User } from '@/lib/type';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
 
-function useMyAccount(): UseQueryResult {
+function useMyAccount(): UseQueryResult<User> {
   const [cookies] = useCookies();
-  const myAccount = useQuery({
+  const myAccount = useQuery<User>({
     queryKey: ['me'],
     queryFn: getMyAccount,
     refetchOnWindowFocus: true,

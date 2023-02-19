@@ -9,15 +9,19 @@ export const meRoute: FastifyPluginAsync = async (fastify) => {
   fastify.register(requireAuthPlugin);
   fastify.get(
     '/',
-    {
-      schema: getMeSchema,
-    },
+    // {
+    //   schema: getMeSchema,
+    // },
     async (request) => {
       if (!request.user) return;
       const market = await userService.market({ userId: request.user?.id });
+      const subscribe = await userService.subscribe({
+        userId: request.user?.id,
+      });
       return {
         ...request.user,
-        market,
+        market: market || null,
+        subscribe: subscribe || [],
       };
     },
   );
