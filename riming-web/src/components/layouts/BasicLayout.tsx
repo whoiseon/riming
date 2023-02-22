@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import FullHeightPage from '@/components/system/FullHeightPage';
 import MobileHeader from '@/components/base/MobileHeader';
 import { colors } from '@/styles/colors';
@@ -10,9 +10,10 @@ import GlobalMenu from '../base/GlobalMenu';
 
 interface Props {
   children: React.ReactNode;
+  className?: string;
 }
 
-function BasicLayout({ children }: Props) {
+function BasicLayout({ children, className }: Props) {
   const { data: meData } = useMyAccount();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -45,7 +46,11 @@ function BasicLayout({ children }: Props) {
           )
         }
       />
-      {menuOpen ? <GlobalMenu closeMenu={toggleMenuButton} /> : <Content>{children}</Content>}
+      {menuOpen ? (
+        <GlobalMenu closeMenu={toggleMenuButton} />
+      ) : (
+        <Content className={className}>{children}</Content>
+      )}
     </FullHeightPage>
   );
 }

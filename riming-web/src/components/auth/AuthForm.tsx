@@ -3,7 +3,7 @@ import LabelInput from '@/components/system/LabelInput';
 import Button from '../system/Button';
 import QuestionLink from './QuestionLink';
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { registerFormErrors, loginFormErrors } from '@/lib/authFormErrors';
 import { type RegisterFormValues } from '@/lib/type';
 import { ErrorName } from '@/lib/error';
@@ -102,11 +102,11 @@ function AuthForm({ mode, onSubmit, isLoading, serverError }: Props) {
             type="text"
             name="username"
             label="이름 또는 닉네임"
+            disabled={isLoading}
             placeholder={usernamePlaceholder}
             errors={errors.username}
             register={register}
             option={usernameErrorOption}
-            disabled={isLoading}
           />
         )}
         <LabelInput
@@ -145,7 +145,7 @@ const Block = styled.form`
   display: flex;
   flex-direction: column;
   padding: 16px;
-  gap: 24px;
+  gap: 32px;
 `;
 
 const InputGroup = styled.div`

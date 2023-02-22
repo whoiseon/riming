@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router';
+ import { useRouter } from 'next/router';
 import AuthForm from '@/components/auth/AuthForm';
-import WelcomeText from '@/components/auth/WelcomeText';
+import WelcomeText from '@/components/system/WelcomeText';
 import { useCallback, useEffect, useState } from 'react';
 import { type RegisterFormValues } from '@/lib/type';
 import { useMutation } from '@tanstack/react-query';

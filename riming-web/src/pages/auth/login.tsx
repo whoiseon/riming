@@ -1,18 +1,14 @@
 import AuthForm from '@/components/auth/AuthForm';
-import WelcomeText from '@/components/auth/WelcomeText';
-import { useCallback, useEffect, useState } from 'react';
+import WelcomeText from '@/components/system/WelcomeText';
+import { useCallback, useState } from 'react';
 import { type loginFormValues } from '@/lib/type';
 import {
-  dehydrate,
-  QueryClient,
   useMutation,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { getMyAccount, getMyAccountServer, login } from '@/lib/api/auth';
+import { login } from '@/lib/api/auth';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
-import useMyAccount from '@/hooks/useMyAccount';
 import { extractError } from '@/lib/error';
 import SimpleLayout from '@/components/layouts/SimpleLayout';
 

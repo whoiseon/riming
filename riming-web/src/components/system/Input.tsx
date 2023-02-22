@@ -1,3 +1,4 @@
+import React from 'react';
 import { colors } from '@/styles/colors';
 import styled from '@emotion/styled';
 import { RegisterOptions, UseFormRegister } from 'react-hook-form';
@@ -9,6 +10,9 @@ export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 function Input({ register, name, option, errors, ...rest }: Props) {
+  if (rest.type === 'file') {
+    return <StyledFileInput {...rest} />;
+  }
   if (register) {
     return (
       <>
@@ -17,11 +21,7 @@ function Input({ register, name, option, errors, ...rest }: Props) {
       </>
     );
   }
-  return (
-    <>
-      <StyledInput {...rest} />
-    </>
-  );
+  return <StyledInput {...rest} />;
 }
 
 const StyledInput = styled.input`
@@ -56,6 +56,17 @@ const StyledInput = styled.input`
       box-shadow: none;
     }
   }
+`;
+
+const StyledFileInput = styled.input`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 `;
 
 const ErrorMessage = styled.p`
