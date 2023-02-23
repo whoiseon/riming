@@ -22,7 +22,7 @@ function LabelImage({ label, preview, checked, toggleDefaultImage, ...rest }: Pr
         <Input type="file" {...rest} />
       </InputGroup>
       <CheckBox
-        id="default-image"
+        id="default-image-checkbox"
         checked={checked}
         onChange={toggleDefaultImage}
         label="우선 기본 이미지를 사용할게요!"

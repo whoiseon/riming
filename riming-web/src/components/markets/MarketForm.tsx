@@ -5,16 +5,18 @@ import LabelImage from '@/components/system/LabelImage';
 import { ChangeEvent, useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { marketFormErrors } from '@/lib/marketFormErrors';
+import { colors } from '@/styles/colors';
 
 function MarketForm() {
   const [attachment, setAttachment] = useState('');
   const [defaultImage, setDefaultImage] = useState<boolean>(false);
 
+  const [openError, setOpenError] = useState('');
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm({
     defaultValues: {
       marketName: '',
@@ -25,6 +27,7 @@ function MarketForm() {
   const toggleDefaultImage = useCallback(() => {
     setDefaultImage((prev) => !prev);
     setAttachment('');
+    setOpenError('');
   }, []);
 
   const onChangeImage = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -45,12 +48,13 @@ function MarketForm() {
   const onSubmit = useCallback(
     (data: any) => {
       if (!defaultImage && !attachment) {
-        console.log('이미지를 등록해주세요');
+        setOpenError('대표 이미지를 등록해주세요!');
         return;
       }
       console.log({
         ...data,
-        marketTag: data.marketTag.split(' '),
+        thumbnail: attachment,
+        marketTag: data.marketTag ? data.marketTag.split(' ') : [],
       });
     },
     [defaultImage, attachment],
@@ -89,6 +93,7 @@ function MarketForm() {
         />
       </InputGroup>
       <ActionsBox>
+        {openError && <ErrorMessage>{openError}</ErrorMessage>}
         <Button type="submit" layoutmode="fullWidth">
           만들기
         </Button>
@@ -117,6 +122,12 @@ const ActionsBox = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 14px;
+  gap: 24px;
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 14px;
+  color: ${colors.distructive.primary};
 `;
 
 export default MarketForm;

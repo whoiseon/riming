@@ -90,6 +90,7 @@ const sharedStyles = (props: ButtonProps) => css`
 
   &:disabled {
     filter: grayscale(0.6);
+    opacity: 0.8;
   }
 
   ${props.layoutmode === 'fullWidth' &&
